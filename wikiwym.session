@@ -1,0 +1,14 @@
+<!DOCTYPE webprojectsession>
+<webprojectsession>
+  <session usePreviewPrefix="0" previewPrefix="" >
+    <itemcursorpositions>
+      <item line="24" column="0" url="lib/tests/v8-juice-GCWP.js" />
+      <item line="75" column="6" url="lib/parser.js" />
+      <item line="339" column="4" url="lib/GoogleCodeWikiParser.js" />
+    </itemcursorpositions>
+    <treestatus>
+      <openfolder url="lib" />
+      <openfolder url="lib/tests" />
+    </treestatus>
+  </session>
+</webprojectsession>

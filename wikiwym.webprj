@@ -1,0 +1,21 @@
+<!DOCTYPE webproject>
+<webproject>
+  <project type="Local" name="wikiwym" encoding="utf8" >
+    <upload/>
+    <author/>
+    <email/>
+    <defaultDTD>-//W3C//DTD HTML 4.01 Transitional//EN</defaultDTD>
+    <item url="style.css" uploadstatus="1" />
+    <item url="index.html" uploadstatus="1" />
+    <item url="lib/" uploadstatus="1" />
+    <item url="lib/prototype.js" uploadstatus="1" />
+    <item url="lib/parser.js" uploadstatus="1" />
+    <item url="" uploadstatus="1" />
+    <templates>templates/</templates>
+    <toolbars>toolbars/</toolbars>
+    <annotations/>
+    <item url="lib/GoogleCodeWikiParser.js" />
+    <item url="lib/tests/" />
+    <item url="lib/tests/v8-juice-GCWP.js" />
+  </project>
+</webproject>
