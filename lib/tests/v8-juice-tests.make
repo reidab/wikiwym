@@ -10,14 +10,18 @@ $(error Could not find v8-juice-shell in the PATH!)
 endif
 
 GC_PROJ := v8-juice
-WIKI_LIST := ClassWrap PluginCurl PluginPosixFILE PluginNCurses
+WIKI_LIST := BindingFunctions ClassWrap PluginCurl PluginPosixFILE PluginNCurses
 
-WIKI_OUT := $(WIKI_LIST)
-#$(patsubst %,%.html,$(WIKI_LIST))
+WIKI_OUT := $(patsubst %,%.html,$(WIKI_LIST))
 
 $(WIKI_OUT):
 	@echo "Fetching $(GC_PROJ) --> $@.wiki..."
-	$(js) v8-juice-GCWP.js -- $(GC_PROJ) $@ > $@
+	$(js) v8-juice-GCWP.js -- $(GC_PROJ) $$(basename $@ .html) > $@
+
 pull: $(WIKI_OUT)
+
+CLEAN_FILES += $(WIKI_OUT)
+clean:
+	-rm -f $(CLEAN_FILES)
 
 all:
