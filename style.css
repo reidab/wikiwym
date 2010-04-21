@@ -85,6 +85,7 @@ pre.prettyprint {
   padding: 0.5em;
   border-left: 3px solid #ccc;
 	background-color: #eee;
+    white-space: pre;
 }
 
 .prettyprint .str { color: #080; }
