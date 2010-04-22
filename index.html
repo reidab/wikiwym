@@ -3,6 +3,7 @@
 <html>
 <head>
   <title>Google Code wiki syntax editor</title>
+  <script src="lib/GoogleCodeWikiParser.js" type="text/javascript"></script>
   <script src="lib/prototype.js" type="text/javascript"></script>
   <script src="lib/parser.js" type="text/javascript"></script>
   <script type="text/javascript">
@@ -22,12 +23,22 @@
 		</tr>
 		<tr>
 			<td class="layout">
-<textarea id="textarea" wrap="soft" rows="50" class="editor"> * Usage
-   * Invoking via the web
-   * Invoking via the command line
-   * Using the dompdf class directly
-   * dompdf class reference
- * Inline PHP support
+<textarea id="textarea" wrap="soft" rows="50" class="editor">
+*_Hi world!_*
+
+|| a || b || c ||
+|| a || b || c ||
+|| a || b || c ||
+
+  * ~~strike~~
+  * ,,subscript,,
+
+  # ^superscript^
+  # _emphasis_
+  # [WikiWord]
+  # [http://code.google.com/p/wikiwym Wikiwym home page]
+
+
 </textarea>
      </td>
 		 <td id="wikicontent" class="layout"></td>

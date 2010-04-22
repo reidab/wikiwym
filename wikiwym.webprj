@@ -56,5 +56,7 @@
     <item url="lib/JSONMessage/response/test/localEventCheck.inc.php" />
     <item url="GoCoWi-previewer.css" />
     <item url="upload-demo-site.sh" />
+    <item url="bookmarklet.js" />
+    <item url="GoCoWi-bookmarklet.js" />
   </project>
 </webproject>
