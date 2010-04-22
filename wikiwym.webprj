@@ -58,5 +58,20 @@
     <item url="upload-demo-site.sh" />
     <item url="bookmarklet.js" />
     <item url="GoCoWi-bookmarklet.js" />
+    <item url="lib/jsdifflib/difflib.js" />
+    <item url="lib/jsdifflib/" />
+    <item url="lib/jsdifflib/diffview.css" />
+    <item url="lib/jsdifflib/diffview.js" />
+    <item url="lib/prettify/" />
+    <item url="lib/prettify/lang-hs.js" />
+    <item url="lib/prettify/lang-lisp.js" />
+    <item url="lib/prettify/lang-lua.js" />
+    <item url="lib/prettify/lang-ml.js" />
+    <item url="lib/prettify/lang-proto.js" />
+    <item url="lib/prettify/lang-sql.js" />
+    <item url="lib/prettify/lang-vb.js" />
+    <item url="lib/prettify/lang-wiki.js" />
+    <item url="lib/prettify/prettify.css" />
+    <item url="lib/prettify/prettify.js" />
   </project>
 </webproject>

@@ -1,7 +1,11 @@
 <!DOCTYPE webprojectsession>
 <webprojectsession>
   <session usePreviewPrefix="0" previewPrefix="" >
-    <itemcursorpositions/>
+    <itemcursorpositions>
+      <item line="10" column="14" url="lib/JSONMessage/JSONMessage.js.php" />
+      <item line="593" column="22" url="lib/GoogleCodeWikiParser.js" />
+      <item line="180" column="38" url="GoCoWi-previewer.html" />
+    </itemcursorpositions>
     <treestatus>
       <openfolder url="lib" />
     </treestatus>
