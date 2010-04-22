@@ -4,7 +4,7 @@
 <head>
   <title>Google Code wiki syntax editor</title>
   <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js' type='text/javascript'></script>
-  <link type="text/css" rel="stylesheet" href="style.css" />
+  <link type="text/css" rel="stylesheet" href="GoCoWi-previewer.css" />
   <script src="lib/GoogleCodeWikiParser.js" type="text/javascript"></script>
   <script type="text/javascript">
     var gcwp;
@@ -50,14 +50,14 @@
 <textarea id="textarea" wrap="soft" rows="50" class="editor">
 =[http://code.google.com/p/wikiwym Wikiwym] demonstration!=
 
-
-  * *bold* _emphasized_ *_bold emphasized ^SuperScript^!_*.
-  * item 2
-  * item 3
+  * *bold* _emphasized_ and *_bold emphasized ^SuperScript^!_*.
+  * item 2 is ~~stricken~~
+  * item 3 is *~~boldly stricken~~*
+  * item 4 is _~~*stricken boldly with emphasis*~~_
 
 || *a* || *b* || *c*||
-|| a2 || b2 || c2||
-|| a3 || b3 || c3||
+|| a2 || ~~b2~~ || c2||
+|| *_a3_* || b3 || *~~c3~~*||
 
   # ~~item~~
   # _~~item~~_
@@ -72,6 +72,7 @@ Intentional errors:
   * unterminated ,,sub
 
 (If those are NOT _all_ marked with errors, something is broken.)
+
 </textarea>
      </td>
 		 <td id="wikicontent" class="layout"></td>

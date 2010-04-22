@@ -5,7 +5,7 @@
   <title>Google Code wiki syntax editor</title>
   <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js' type='text/javascript'></script>
   <script src='lib/JSONMessage/JSONMessage.js.php' type='text/javascript'></script>
-  <link type="text/css" rel="stylesheet" href="style.css" />
+  <link type="text/css" rel="stylesheet" href="GoCoWi-previewer.css" />
   <script src="lib/GoogleCodeWikiParser.js" type="text/javascript"></script>
   <link href="lib/prettify.css" type="text/css" rel="stylesheet" />
   <script type="text/javascript" src="lib/prettify.js"></script>
@@ -87,9 +87,9 @@
     });
     function updateView()
     {
-        var c = ThisApp.textarea.attr('value');
         try
         {
+            var c = ThisApp.textarea.attr('value');
             c = ThisApp.gcwp.parse(c);
             if( ThisApp.pageName )
             {
@@ -133,7 +133,7 @@
                     }
                     // FIXME: we could point them back to the original source or load them.
             });
-            prettyPrint();
+            prettyPrint()/* updates {{{code}}} blocks. */;
         }
         catch(e)
         {
@@ -143,12 +143,14 @@
 
     function goHome()
     {
-        ThisApp.textarea.attr('value', ThisApp.hiddenDefaultWiki.text());updateView();
-        if( ThisApp.project != ThisApp.homeProject )
-        {
-            loadProjectList(ThisApp.homeProject);
-        }
+        ThisApp.project = ThisApp.pageName = null;
+        ThisApp.textarea.attr('value', ThisApp.hiddenDefaultWiki.text());
+        updateView();
+        //if( ThisApp.project != ThisApp.homeProject )
+        loadProjectList(ThisApp.homeProject);
     }
+
+    // JSONRequest.post() onResponse() handler.
     function processLoadedWikiPage(resp,req)
     {
         if( 0 != resp.resultCode() )
@@ -165,6 +167,7 @@
 
     function loadWikiPage(pageName)
     {
+        ThisApp.pageName = null;
         ThisApp.textarea.text("Loading page "+ThisApp.project+'/'+pageName+' from Google Code subversion...');
         updateView();
         //alert("Clicked "+pg);
@@ -176,6 +179,7 @@
         r.post( {onResponse:processLoadedWikiPage} );
     }
 
+    // JSONRequest.post() onResponse() handler.
     function processLoadedProjectList(resp,req)
     {
         if( 0 != resp.resultCode() )
@@ -231,7 +235,7 @@
   </script>
 </head>
 <body>
-	<table class="layout">
+	<table class="layout" style='width:98%'>
 		<tr>
 			<td class="layout" style="border-bottom: 1px solid #999; padding: 2px;" colspan="2">
 			  Copy/paste the wiki code in the textarea on the left, edit it, and
@@ -250,6 +254,7 @@
     </div>
   </td>
   </tr>
+  <tr><th>Google Code-style Wiki Markup</th><th>HTML</th></tr>
   <tr>
     <td class="layout" width='50%'>
         <input type='button' onclick="goHome();return false;" value="Home"></input>
@@ -291,15 +296,26 @@ In the text field at the top of the screen you can enter the name of a project h
 [http://code.google.com Google Code] and click the Load button to load the list of wiki pages for that project
 (taken from their SVN repository). Then click on a page name to preview it here.
 
-This app was written by [http://wanderinghorse.net/home/stephan/ Stephan Beal] using:
+This app was written by [http://wanderinghorse.net/home/stephan/ Stephan Beal] with a little help from:
 
   * [http://fossil.wanderinghorse.net/repos/JSONMessage JSONMessage] for the AJAX/RPC support. (i.e. fetching remote wiki pages.)
   * [http://www.jquery.com jQuery] to simplify the DOM manipulation.
-  * [http://code.google.com/p/wikiwym Wikiwym] for the wiki parsing.
+  * [http://code.google.com/p/wikiwym Wikiwym] for the wiki-to-HTML conversion.
   * [http://code.google.com/p/google-code-prettify/ google-code-prettify] for the syntax highlighting in source code blocks.
   * [http://getfirebug.com/ Firebug] (in [http://www.getfirefox.com Firefox]) was often helpful, but most testing took place in [http://www.google.com/chrome Google Chrome]. (Running on Linux, of course.)
   * [http://kdewebdev.org Quanta/KDEWebDev] as the dev environment (because Emacs can't indent !JavaScript worth a damn).
   * A bacon and egg sandwich to curb the hunger in the middle of the hacking session.
+  * [http://www.bobross.com Bob Ross]. He's The Man.
+
+Some possible TODOs:
+
+  * Install a client-side cache for requested pages and project wiki lists, with a timeout/expiry time on cache entries (handled via `setTimeout()`). The RPC/messaging framework gives us a hook to do this, but it needs to be coded.
+  * With the cache in place we can allow swapping between multiple pages, keeping any hand-edited changes between swaps. i.e. one could work on multiple pages at a time.
+  * A history list of pages/projects visits this session, to allow faster swapping between them.
+
+All of that is simple enough to do, but as of this moment i've been awake 24 hours and hacking the last 18 of them, and i'm
+too tired to deal with it.
+
 
 </div>
 <span id='ajaxNotification'></span>
