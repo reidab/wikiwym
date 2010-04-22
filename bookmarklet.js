@@ -2,6 +2,7 @@ if (document.forms.wiki_edit) {
 
 var wikiCodeTimeout, scripts = [
   "http://ajax.googleapis.com/ajax/libs/prototype/1.6.1.0/prototype.js",
+  "http://wikiwym.googlecode.com/svn/trunk/lib/GoogleCodeWikiParser.js",
   "http://wikiwym.googlecode.com/svn/trunk/lib/parser.js"
 ],
 head = document.getElementsByTagName("head")[0];
