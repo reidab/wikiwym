@@ -22,7 +22,15 @@
     function updateView()
     {
         var c = jQuery('#textarea').attr('value');
-        jQuery('#wikicontent').html( gcwp.parse(c) );
+        try
+        {
+            c = gcwp.parse(c)
+            jQuery('#wikicontent').html( c );
+        }
+        catch(e)
+        {
+            alert("Exception while parsing wiki code:\n"+e);
+        }
     }
   </script>
 </head>
@@ -55,6 +63,15 @@
   # _~~item~~_
   * item
 
+Intentional errors:
+
+  * *unterminated bold
+  * unterminated _*italics*
+  * unterminated ^sup
+  * mis-terminated ,,sub,
+  * unterminated ,,sub
+
+(If those are NOT _all_ marked with errors, something is broken.)
 </textarea>
      </td>
 		 <td id="wikicontent" class="layout"></td>
