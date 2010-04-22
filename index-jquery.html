@@ -3,37 +3,36 @@
 <html>
 <head>
   <title>Google Code wiki syntax editor</title>
-  <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js' type='text/javascript'></script>
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+  <script type="text/javascript" src="lib/GoogleCodeWikiParser.js"></script>
   <link type="text/css" rel="stylesheet" href="GoCoWi-previewer.css" />
-  <script src="lib/GoogleCodeWikiParser.js" type="text/javascript"></script>
   <script type="text/javascript">
     var gcwp;
-    jQuery(document).ready(function(JQ) {
-        jQuery.noConflict();
-        gcwp = new GoogleCodeWikiParser();
-        updateView();
-        jQuery('#textarea').keypress(function(event) {
-            if (event.keyCode == '13') {
-                //event.preventDefault();
-                updateView();
-            }
-        });
+    jQuery(document).ready(function() {
+      jQuery.noConflict();
+      gcwp = new GoogleCodeWikiParser();
+      updateView();
+      jQuery('#textarea').keypress(function(event) {
+        if (event.keyCode == 13) {
+          //event.preventDefault();
+          updateView();
+        }
+      });
     });
-    function updateView()
-    {
-        var c = jQuery('#textarea').attr('value');
-        try
-        {
-            c = gcwp.parse(c)
-            jQuery('#wikicontent').html( c );
-        }
-        catch(e)
-        {
-            alert("Exception while parsing wiki code:\n"+e);
-        }
+		
+    function updateView() {
+      var c = jQuery('#textarea').attr('value');
+      try {
+        c = gcwp.parse(c)
+        jQuery('#wikicontent').html(c);
+      } 
+			catch(e) {
+        alert("Exception while parsing wiki code:\n"+e);
+      }
     }
   </script>
 </head>
+
 <body>
 	<table class="layout">
 		<tr>
@@ -41,8 +40,8 @@
 			  Copy/paste the wiki code in the textarea on the left, edit it, and
               click the button to update the preview on the right. It will also update each time
               you tap the ENTER key in the left-side editor.
-     <br />
-     <input type='button' onclick="updateView();return false;" value="Update Preview"></input>
+		    <br />
+		    <button onclick="updateView()">Update Preview</button>
 		  </td>
 		</tr>
 		<tr>
@@ -80,8 +79,8 @@ Intentional errors:
 
 [http://wanderinghorse.net/home/stephan/ http://wanderinghorse.net/home/stephan/stephan_beal_sylt_072006_small.jpg]
 </textarea>
-     </td>
-		 <td id="wikicontent" class="layout"></td>
+      </td>
+		  <td id="wikicontent" class="layout"></td>
 		</tr>
 	</table>
 </body>

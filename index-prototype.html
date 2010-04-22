@@ -1,0 +1,48 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+  <title>Google Code wiki syntax editor</title>
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/prototype/1.6.1.0/prototype.js"></script>
+  <script type="text/javascript" src="lib/GoogleCodeWikiParser.js"></script>
+  <script type="text/javascript" src="lib/parser.js"></script>
+  <script type="text/javascript">
+    window.onload = function(){
+      var parser = new Wikiwym("textarea", "wikicontent");
+    }
+  </script>
+  <link type="text/css" rel="stylesheet" href="style.css" />
+</head>
+<body>
+	<table class="layout">
+		<tr>
+			<td class="layout" style="border-bottom: 1px solid #999; padding: 2px;" colspan="2">
+			  Copy/paste the wiki code in the textarea on the left, edit it, and the live preview on the right will be updated !
+				Tested on Firefox, Chrome. Some features are available on IE7+ and Opera. A few wiki codes are still missing.
+		  </td>
+		</tr>
+		<tr>
+			<td class="layout">
+<textarea id="textarea" wrap="soft" rows="50" class="editor">
+*_Hi world!_*
+
+|| a || b || c ||
+|| a || b || c ||
+|| a || b || c ||
+
+  * ~~strike~~
+  * ,,subscript,,
+
+  # ^superscript^
+  # _emphasis_
+  # [WikiWord]
+  # [http://code.google.com/p/wikiwym Wikiwym home page]
+
+
+</textarea>
+      </td>
+		  <td id="wikicontent" class="layout"></td>
+		</tr>
+	</table>
+</body>
+</html>
