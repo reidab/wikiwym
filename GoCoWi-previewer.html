@@ -4,7 +4,12 @@
 <head>
   <title>Google Code wiki syntax editor</title>
   <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js' type='text/javascript'></script>
+    <script src='lib/jsdifflib//difflib.js' type='text/javascript'></script>
+    <script src='lib/jsdifflib//diffview.js' type='text/javascript'></script>
+    <link href='lib/jsdifflib//diffview.css' rel='stylesheet' type='text/css'></script>
   <script src='lib/JSONMessage/JSONMessage.js.php' type='text/javascript'></script>
+  
+  <script src='lib/jsdifflib//difflib.js' type='text/javascript'></script>
   <link type="text/css" rel="stylesheet" href="GoCoWi-previewer.css" />
   <script src="lib/GoogleCodeWikiParser.js" type="text/javascript"></script>
   <link href="lib/prettify.css" type="text/css" rel="stylesheet" />
@@ -30,7 +35,9 @@
         btnProjectLoad:null,
         pageList:null,
         hiddenDefaultWiki:null,
-        homeProject:'wikiwym'
+        homeProject:'wikiwym',
+        diffMode:false,
+        pageCache: {}
     };
     jQuery(document).ready(function(JQ) {
         jQuery.noConflict();
@@ -62,7 +69,12 @@
             updateView();
             //alert( ThisApp.gcwp.options.disableWarnings );
         });
-
+        ThisApp.cbDiffMode = jQuery('#optionDiffMode');
+        ThisApp.cbDiffMode.click( function() {
+            ThisApp.diffMode = jQuery(this).is(':checked');
+            updateView();
+            //alert( ThisApp.gcwp.options.disableWarnings );
+        });
         if(1)
         {
             var sel = jQuery('#SelectProject');
@@ -105,65 +117,88 @@
         try
         {
             var c = ThisApp.textarea.attr('value');
-            c = ThisApp.gcwp.parse(c);
-            if( ThisApp.pageName )
+            if(!ThisApp.diffMode)
             {
-                c = '<h1>'+ThisApp.pageName+'</h1>'+c;
+                c = ThisApp.gcwp.parse(c);
+                if( ThisApp.pageName )
+                {
+                    c = '<h1>'+ThisApp.pageName+'</h1>'+c;
+                }
+                ThisApp.preview.html( c );
+                if(1)
+                {
+                    // obligatory layout kludge:
+                    var wid = jQuery('#layout').width() || jQuery('body').width() || 800;
+                    var ht =  ThisApp.preview.height() || jQuery('body').height() || 800;
+                    wid = (wid-(wid/25))/2;
+                    ThisApp.textarea.css({width:wid, height:ht});
+                    //ThisApp.preview.css({width:wid});
+                }
+                /**
+                    Update links within the preview area:
+
+                    - those starting with "http" or '#' are left as-is.
+
+                    - Links where the href element exactly matches
+                    one of the pages for the current project will
+                    cause that page to load.
+                */
+                jQuery('a',ThisApp.preview)
+                    .not('[href^="http"]')
+                    .not('[href^=#]')
+                    .click(function(){
+                        var self = jQuery(this);
+                        var hr = self.attr('href');
+                        var linkto = jQuery('a',ThisApp.pageList).filter('[text='+hr+']');
+                        if( linkto.length )
+                        {
+                            loadWikiPage( hr );
+                            return false;
+                        }
+                        //else if( /^http/i, hr ) return true;
+                        else
+                        {
+                            alert("This link is disabled by this application.");
+                            return false;
+                        }
+                        // FIXME: we could point them back to the original source or load them.
+                });
+                prettyPrint()/* updates {{{code}}} blocks. */;
             }
-            ThisApp.preview.html( c );
-            if(1)
+            else if(c) // diff mode
             {
-                // obligatory layout kludge:
-                var wid = jQuery('#layout').width() || jQuery('body').width() || 800;
-                var ht =  ThisApp.preview.height() || jQuery('body').height() || 800;
-                wid = (wid-(wid/25))/2;
-                ThisApp.textarea.css({width:wid, height:ht});
-                //ThisApp.preview.css({width:wid});
+                var orig = ThisApp.pageCache[ThisApp.pageName];
+                var base = difflib.stringAsLines(orig ? orig : c);
+                var newtxt = difflib.stringAsLines(c);
+                // create a SequenceMatcher instance that diffs the two sets of lines
+                var sm = new difflib.SequenceMatcher(base, newtxt);
+                // get the opcodes from the SequenceMatcher instance
+                // opcodes is a list of 3-tuples describing what changes should be made to the base text
+                //      in order to yield the new text
+                var opcodes = sm.get_opcodes();
+                var diffoutputdiv = ThisApp.preview;
+                diffoutputdiv.empty();
+                var contextSize = null;
+                // build the diff view and add it to the current DOM
+                diffoutputdiv.append(diffview.buildView({
+                    baseTextLines:base,
+                    newTextLines:newtxt,
+                    opcodes:opcodes,
+                    // set the display titles for each resource
+                    baseTextName:"Their Copy",
+                    newTextName:"Your Copy",
+                    contextSize:contextSize,
+                    viewType: 1 //$("inline").checked ? 1 : 0
+                }));
+                // scroll down to the diff view
+                //window.location = url + "#diff";
             }
-            /**
-                Update links within the preview area:
 
-                - those starting with "http" or '#' are left as-is.
-
-                - Links where the href element exactly matches
-                one of the pages for the current project will
-                cause that page to load.
-            */
-            jQuery('a',ThisApp.preview)
-                .not('[href^="http"]')
-                .not('[href^=#]')
-                .click(function(){
-                    var self = jQuery(this);
-                    var hr = self.attr('href');
-                    var linkto = jQuery('a',ThisApp.pageList).filter('[text='+hr+']');
-                    if( linkto.length )
-                    {
-                        loadWikiPage( hr );
-                        return false;
-                    }
-                    //else if( /^http/i, hr ) return true;
-                    else
-                    {
-                        alert("This link is disabled by this application.");
-                        return false;
-                    }
-                    // FIXME: we could point them back to the original source or load them.
-            });
-            prettyPrint()/* updates {{{code}}} blocks. */;
         }
         catch(e)
         {
             alert("Exception while parsing wiki code:\n"+e);
         }
-    }
-
-    function goHome()
-    {
-        ThisApp.project = ThisApp.pageName = null;
-        ThisApp.textarea.attr('value', ThisApp.hiddenDefaultWiki.html());
-        updateView();
-        //if( ThisApp.project != ThisApp.homeProject )
-        loadProjectList(ThisApp.homeProject);
     }
 
     // JSONRequest.post() onResponse() handler.
@@ -177,6 +212,7 @@
         }
         var p = resp.payload();
         ThisApp.pageName = p.page;
+        ThisApp.pageCache[p.page] = p.content;
         ThisApp.textarea.attr('value',p.content);
         updateView();
     }
@@ -248,6 +284,17 @@
                     }});
         r.post( {onResponse:processLoadedProjectList} );
     }
+    function goHome()
+    {
+        ThisApp.project = ThisApp.pageName = null;
+        var val = ThisApp.hiddenDefaultWiki.html();
+        ThisApp.textarea.attr('value', val );
+        ThisApp.pageCache[ThisApp.pageName] = val; // necessary for diff to work for the local page.
+        updateView();
+        //if( ThisApp.project != ThisApp.homeProject )
+        loadProjectList(ThisApp.homeProject);
+    }
+
   </script>
 </head>
 <body>
@@ -288,6 +335,7 @@
     <td align='left'>
         <input type='button' onclick="goHome();return false;" value="Home"></input>
         <span class='container' title='Note that warnings may be caused by some malformed wiki code or bugs in this parser.'>Disable parser warnings? <input type='checkbox' id='optionEnableWarnings' /></span>
+        <span class='container' title='Switch between preview and diff modes.'>Diff mode?<input type='checkbox' id='optionDiffMode' /></span>
     </td>
     <td align='left'>
         <input type='button' onclick="updateView();return false;" value="Update Preview"></input>
@@ -312,7 +360,7 @@ to run this application. Sorry. Try <a href='http://www.google.com/chrome'>Googl
 
 =Using this Application=
 In the text field at the top of the screen you can enter the name of a project hosted at
-[http://code.google.com Google Code]to load the list of wiki pages for that project
+[http://code.google.com Google Code] to load the list of wiki pages for that project
 (taken from their SVN repository). Then click on a page name to preview it here.
 
 
