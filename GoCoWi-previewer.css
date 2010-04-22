@@ -28,15 +28,23 @@ textarea.editor {
 }
 
 #wikicontent {
-	border-left: 1px solid #000;
-	padding: 0.3em;
+	/*border-left: 1px solid #000;*/
+    width: 98%;
+    height: 98%;
+    margin: 0.5em;
+	padding: 0.5em;
+}
+
+span.container {
+    border: 1px solid lightgrey;
+    background-color: #eeeeee;
 }
 
 a:link { color: #0000cc; }
 body { background: #fff; margin: 0; font-size: 12px;}
 body, select, input { font-family: arial, sans-serif;}
 td td, th th, th td, td th { font-size: 100%;}
-pre { font-size: 110%; white-space: pre-line;}
+pre { font-size: 110%; white-space: pre;}
 form { padding:0; margin:0;}
 
 table { border-collapse: separate; }

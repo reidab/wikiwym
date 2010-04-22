@@ -43,15 +43,18 @@
         ThisApp.btnProjectLoad  = jQuery('#LoadProjectButton');
         ThisApp.pageList = jQuery('#WikiPageList');
         ThisApp.textarea.keypress(function(event) {
-            if (event.keyCode == '13') {
+            if ((event.keyCode == '13'/*\r*/) || (event.keyCode=='9'/*tab*/)) {
                 //event.preventDefault();
                 updateView();
             }
         });
-        ThisApp.projectInput.keypress(function(event) {
-            if (event.keyCode == '13') {
-                ThisApp.btnProjectLoad.click();
+        ThisApp.projectInput.change(function(event) {
+            //if ((event.keyCode == '13')  || (event.keyCode=='9'/*tab*/)) {
+            if( jQuery(this).attr('value') != ThisApp.project )
+            {
+                loadProjectList();
             }
+            //}
         });
         ThisApp.cbEnableWarn = jQuery('#optionEnableWarnings');
         ThisApp.cbEnableWarn.click( function() {
@@ -60,6 +63,18 @@
             //alert( ThisApp.gcwp.options.disableWarnings );
         });
 
+        if(1)
+        {
+            var sel = jQuery('#SelectProject');
+            //jQuery('option',sel).
+            sel.change( function(){
+                var val = jQuery('option:selected',this).attr('value');
+                if( ! /^-/.test(val) )
+                {
+                    loadProjectList( val );
+                }
+            });
+        }
         if(1)
         {  // Add a visual notification when JSONRequest messages are pending...
             var notif = jQuery('#ajaxNotification');
@@ -144,7 +159,7 @@
     function goHome()
     {
         ThisApp.project = ThisApp.pageName = null;
-        ThisApp.textarea.attr('value', ThisApp.hiddenDefaultWiki.text());
+        ThisApp.textarea.attr('value', ThisApp.hiddenDefaultWiki.html());
         updateView();
         //if( ThisApp.project != ThisApp.homeProject )
         loadProjectList(ThisApp.homeProject);
@@ -237,31 +252,91 @@
 <body>
 	<table class="layout" style='width:98%'>
 		<tr>
+<!--   
 			<td class="layout" style="border-bottom: 1px solid #999; padding: 2px;" colspan="2">
-			  Copy/paste the wiki code in the textarea on the left, edit it, and
-              click the button to update the preview on the right. It will also update each time
+			  Copy/paste/edit the wiki code in the textarea on the left
+              click the Update button to update the preview on the right. It will also update each time
               you tap the ENTER key in the left-side editor.
 		  </td>
+  -->      
+            <td class="layout" style="border-bottom: 1px solid #999; padding: 2px;" align='center' colspan="2">
+            <h1><a href='http://code.google.com/p/wikiwym/'>Wikiwym</a> Wiki Parser Demo</h1>
+          </td>
 		</tr>
   <tr>
   <td colspan=2>
     Google Code project name: <input type='text' id='GoCoProjectName' cols='40' value='wikiwym'/>
+    or: <select id='SelectProject'>
+    <option>--Select Project--</option>
+    <option>v8</option>
+    <option>v8-juice</option>
+    <option>qboard</option>
+    <option>whefs</option>
+    <option>wikiwym</option>
+    </select>
+    <!--
     <input type='button' id='LoadProjectButton' onclick='loadProjectList();return false;' value='Load page list.'></input>
+    -->
     <span id='WikiPageList'></span>
     <br/>
-    <div id='optionsArea'>
-    <span title='Note that warnings may be caused by some malformed wiki code or bugs in this parser.'>Disable parser warnings? <input type='checkbox' id='optionEnableWarnings' /></span>
-    </div>
   </td>
+  </tr>
+  <tr>
+    <td align='left'>
+        <input type='button' onclick="goHome();return false;" value="Home"></input>
+        <span class='container' title='Note that warnings may be caused by some malformed wiki code or bugs in this parser.'>Disable parser warnings? <input type='checkbox' id='optionEnableWarnings' /></span>
+    </td>
+    <td align='left'>
+        <input type='button' onclick="updateView();return false;" value="Update Preview"></input>
+    </td>
   </tr>
   <tr><th>Google Code-style Wiki Markup</th><th>HTML</th></tr>
   <tr>
-    <td class="layout" width='50%'>
-        <input type='button' onclick="goHome();return false;" value="Home"></input>
-        <input type='button' onclick="updateView();return false;" value="Update Preview"></input>
-        <br />
+    <td class="layout" width='50%' valign='top' align='left'>
         <textarea id="textarea" wrap="soft" rows="50" class="editor">
+If you see this text then your browser cannot handle the JavaScript needed
+to run this application. Sorry. Try <a href='http://www.google.com/chrome'>Google Chrome</a>.
 </textarea>
+     </td>
+    <td valign='top' align='left'><div id="wikicontent" class="layout"  width='50%'></div></td>
+    </tr>
+</table>
+<!--
+<wiki:toc max_depth=3></wiki:toc>
+-->
+<div id='DefaultWikiText' style='visibility:hidden'>
+=[http://code.google.com/p/wikiwym Wikiwym] demonstration!=
+
+=Using this Application=
+In the text field at the top of the screen you can enter the name of a project hosted at
+[http://code.google.com Google Code]to load the list of wiki pages for that project
+(taken from their SVN repository). Then click on a page name to preview it here.
+
+
+=About this Application=
+This app was written by [http://wanderinghorse.net/home/stephan/ Stephan Beal] with a little help from:
+
+  * [http://fossil.wanderinghorse.net/repos/JSONMessage JSONMessage] for the AJAX/RPC support. (i.e. fetching remote wiki pages.)
+  * [http://www.jquery.com jQuery] to simplify the DOM manipulation.
+  * [http://code.google.com/p/wikiwym Wikiwym] for the wiki-to-HTML conversion.
+  * [http://code.google.com/u/fabien.menager/ Fabien M&#0233;nager] provided the initial wiki-parsing code and inspiration.
+  * [http://code.google.com/p/google-code-prettify/ google-code-prettify] for the syntax highlighting in source code blocks.
+  * [http://getfirebug.com/ Firebug] (in [http://www.getfirefox.com Firefox]) was often helpful, but most testing took place in [http://www.google.com/chrome Google Chrome]. (Running on Linux, of course.)
+  * [http://kdewebdev.org Quanta/KDEWebDev] as the dev environment (because Emacs can't indent !JavaScript worth a damn).
+  * A bacon and egg sandwich to curb the hunger in the middle of the hacking session.
+  * [http://www.bobross.com Bob Ross]. He's The Man.
+
+=Potential TODOs=
+
+  * Install a client-side cache for requested pages and project wiki lists, with a timeout/expiry time on cache entries (handled via a `setInterval()` loop). The RPC/messaging framework gives us a hook-in place to do this with, but it needs to be coded.
+  * With the cache in place we can allow swapping between multiple pages, keeping any hand-edited changes between swaps. i.e. one could work on multiple pages at a time.
+  * A history list of pages/projects visits this session, to allow faster swapping between them.
+  * Ability to load a specific version of a wiki page.
+
+All of that is simple enough to do, but as of this moment i've been awake 24 hours and hacking the last 18 of them, and i'm
+too tired to deal with it.
+</div>
+<span id='ajaxNotification'></span>
 <!--
   * *bold* _emphasized_ *_bold emphasized ^SuperScript^!_*.
   * item 2
@@ -285,39 +360,5 @@ Intentional errors:
 
 (If those are NOT _all_ marked with errors, something is broken.)
 -->
-     </td>
-    <td valign='top' align='left'><div id="wikicontent" class="layout"  width='50%'></div></td>
-    </tr>
-</table>
-<div id='DefaultWikiText' style='visibility:hidden'>
-=[http://code.google.com/p/wikiwym Wikiwym] demonstration!=
-
-In the text field at the top of the screen you can enter the name of a project hosted at
-[http://code.google.com Google Code] and click the Load button to load the list of wiki pages for that project
-(taken from their SVN repository). Then click on a page name to preview it here.
-
-This app was written by [http://wanderinghorse.net/home/stephan/ Stephan Beal] with a little help from:
-
-  * [http://fossil.wanderinghorse.net/repos/JSONMessage JSONMessage] for the AJAX/RPC support. (i.e. fetching remote wiki pages.)
-  * [http://www.jquery.com jQuery] to simplify the DOM manipulation.
-  * [http://code.google.com/p/wikiwym Wikiwym] for the wiki-to-HTML conversion.
-  * [http://code.google.com/p/google-code-prettify/ google-code-prettify] for the syntax highlighting in source code blocks.
-  * [http://getfirebug.com/ Firebug] (in [http://www.getfirefox.com Firefox]) was often helpful, but most testing took place in [http://www.google.com/chrome Google Chrome]. (Running on Linux, of course.)
-  * [http://kdewebdev.org Quanta/KDEWebDev] as the dev environment (because Emacs can't indent !JavaScript worth a damn).
-  * A bacon and egg sandwich to curb the hunger in the middle of the hacking session.
-  * [http://www.bobross.com Bob Ross]. He's The Man.
-
-Some possible TODOs:
-
-  * Install a client-side cache for requested pages and project wiki lists, with a timeout/expiry time on cache entries (handled via `setTimeout()`). The RPC/messaging framework gives us a hook to do this, but it needs to be coded.
-  * With the cache in place we can allow swapping between multiple pages, keeping any hand-edited changes between swaps. i.e. one could work on multiple pages at a time.
-  * A history list of pages/projects visits this session, to allow faster swapping between them.
-
-All of that is simple enough to do, but as of this moment i've been awake 24 hours and hacking the last 18 of them, and i'm
-too tired to deal with it.
-
-
-</div>
-<span id='ajaxNotification'></span>
 </body>
 </html>
