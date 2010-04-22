@@ -12,6 +12,12 @@
         jQuery.noConflict();
         gcwp = new GoogleCodeWikiParser();
         updateView();
+        jQuery('#textarea').keypress(function(event) {
+            if (event.keyCode == '13') {
+                //event.preventDefault();
+                updateView();
+            }
+        });
     });
     function updateView()
     {
@@ -24,7 +30,9 @@
 	<table class="layout">
 		<tr>
 			<td class="layout" style="border-bottom: 1px solid #999; padding: 2px;" colspan="2">
-			  Copy/paste the wiki code in the textarea on the left, edit it, and click the button to update the preview on the right.
+			  Copy/paste the wiki code in the textarea on the left, edit it, and
+              click the button to update the preview on the right. It will also update each time
+              you tap the ENTER key in the left-side editor.
      <br />
      <input type='button' onclick="updateView();return false;" value="Update Preview"></input>
 		  </td>
@@ -32,9 +40,21 @@
 		<tr>
 			<td class="layout">
 <textarea id="textarea" wrap="soft" rows="50" class="editor">
-=h1=
-==h2==
-*bold* _emphasized_ *_bold emphasized ^SuperScript!^_*.
+=[http://code.google.com/p/wikiwym Wikiwym] demonstration!=
+
+
+  * *bold* _emphasized_ *_bold emphasized ^SuperScript^!_*.
+  * item 2
+  * item 3
+
+|| *a* || *b* || *c*||
+|| a2 || b2 || c2||
+|| a3 || b3 || c3||
+
+  # ~~item~~
+  # _~~item~~_
+  * item
+
 </textarea>
      </td>
 		 <td id="wikicontent" class="layout"></td>

@@ -14,8 +14,10 @@
     <templates>templates/</templates>
     <toolbars>toolbars/</toolbars>
     <annotations/>
-    <item url="lib/GoogleCodeWikiParser.js" />
-    <item url="lib/tests/" />
-    <item url="lib/tests/v8-juice-GCWP.js" />
+    <item url="lib/GoogleCodeWikiParser.js" uploadstatus="1" />
+    <item url="lib/tests/" uploadstatus="1" />
+    <item url="lib/tests/v8-juice-GCWP.js" uploadstatus="1" />
+    <item url="lib/tests/v8-juice-tests.make" uploadstatus="1" />
+    <item url="index-jquery.html" />
   </project>
 </webproject>

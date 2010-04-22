@@ -17,8 +17,10 @@ WIKI_OUT := $(patsubst %,%.html,$(WIKI_LIST))
 $(WIKI_OUT):
 	@echo "Fetching $(GC_PROJ) --> $@.wiki..."
 	$(js) v8-juice-GCWP.js -- $(GC_PROJ) $$(basename $@ .html) > $@
+SupportedWikiSyntax.html:
+	$(js) v8-juice-GCWP.js -- wikiwym SupportedWikiSyntax > $@
 
-pull: $(WIKI_OUT)
+pull: $(WIKI_OUT) SupportedWikiSyntax.html
 
 CLEAN_FILES += $(WIKI_OUT)
 clean:
