@@ -29,5 +29,5 @@ rsync -Cvzr $modeflags --progress -e ssh \
     --exclude=.svn \
     --exclude '*~' \
     --exclude="php.ini" \
-    GoCo*.* index-jquery.html *.css lib \
+    GoCo*.* *.html *.css lib \
     $login:www.f/demos/wikiwym/.
