@@ -38,7 +38,7 @@
         pageList:null,
         hiddenDefaultWiki:null,
         homeProject:'wikiwym',
-        diffMode:false,
+        viewMode:'preview',
         pageCache: {}
     };
     jQuery(document).ready(function(JQ) {
@@ -71,12 +71,6 @@
             updateView();
             //alert( ThisApp.gcwp.options.disableWarnings );
         });
-        ThisApp.cbDiffMode = jQuery('#optionDiffMode');
-        ThisApp.cbDiffMode.click( function() {
-            ThisApp.diffMode = jQuery(this).is(':checked');
-            updateView();
-            //alert( ThisApp.gcwp.options.disableWarnings );
-        });
         if(1)
         {
             var sel = jQuery('#SelectProject');
@@ -89,6 +83,10 @@
                 }
             });
         }
+        jQuery('input[name=viewMode]').click( function() {
+          ThisApp.viewMode = jQuery(this).attr('value');
+          updateView();
+        });
         if(1)
         {  // Add a visual notification when JSONRequest messages are pending...
             var notif = jQuery('#ajaxNotification');
@@ -116,10 +114,20 @@
     });
     function updateView()
     {
+        function obligatoryLayoutKludge(src,dest)
+        {
+          // obligatory layout kludge:
+          var wid = jQuery('#layout').width() || jQuery('body').width() || 800;
+          var ht =  src.height() || jQuery('body').height() || 800;
+          if( ht < 64 ) ht = 64;
+          wid = (wid-(wid/25))/2;
+          dest.css({width:wid, height:ht});
+          //ThisApp.preview.css({width:wid});
+        }
         try
         {
             var c = ThisApp.textarea.attr('value');
-            if(!ThisApp.diffMode)
+            if((!ThisApp.viewMode) || ('preview' === ThisApp.viewMode))
             {
                 c = ThisApp.gcwp.parse(c);
                 if( ThisApp.pageName )
@@ -127,16 +135,7 @@
                     c = '<h1>'+ThisApp.pageName+'</h1>'+c;
                 }
                 ThisApp.preview.html( c );
-                if(1)
-                {
-                    // obligatory layout kludge:
-                    var wid = jQuery('#layout').width() || jQuery('body').width() || 800;
-                    var ht =  ThisApp.preview.height() || jQuery('body').height() || 800;
-                    if( ht < 64 ) ht = 64;
-                    wid = (wid-(wid/25))/2;
-                    ThisApp.textarea.css({width:wid, height:ht});
-                    //ThisApp.preview.css({width:wid});
-                }
+                obligatoryLayoutKludge(ThisApp.preview, ThisApp.textarea);
                 /**
                     Update links within the preview area:
 
@@ -168,7 +167,7 @@
                 });
                 prettyPrint()/* updates {{{code}}} blocks. */;
             }
-            else if(c) // diff mode
+            else if(c && ('diff' === ThisApp.viewMode))
             {
                 var orig = ThisApp.pageCache[ThisApp.pageName];
                 var base = difflib.stringAsLines(orig ? orig : c);
@@ -188,13 +187,28 @@
                     newTextLines:newtxt,
                     opcodes:opcodes,
                     // set the display titles for each resource
-                    baseTextName:"Their Copy",
-                    newTextName:"Your Copy",
+                    baseTextName:"Server Version",
+                    newTextName:"Your Version",
                     contextSize:contextSize,
                     viewType: 1 //$("inline").checked ? 1 : 0
                 }));
-                // scroll down to the diff view
-                //window.location = url + "#diff";
+                obligatoryLayoutKludge( jQuery(diffoutputdiv), ThisApp.textarea);
+            }
+            else if( c && ('html' === ThisApp.viewMode) )
+            {
+                if(c) c = ThisApp.gcwp.parse(c);
+                //alert( c ? c.substr(1,10) : "EMPTY!");
+                var wrap = jQuery('<div></div>');
+                if( ThisApp.pageName )
+                {
+                    wrap.append( '<h1>'+ThisApp.pageName+'</h1>' );
+                }
+                var ta = jQuery("<textarea cols='60'></textarea>");
+                ta.attr('value', c );
+                wrap.append(ta);
+                //ta.css( ThisApp.textarea.css() );// breaks in jQuery core
+                obligatoryLayoutKludge( ThisApp.textarea, ta );
+                ThisApp.preview.empty().append(wrap);
             }
 
         }
@@ -340,7 +354,12 @@
     <td align='left'>
       <button onclick="goHome()">Home</button>
       <span class='container' title='Note that warnings may be caused by some malformed wiki code or bugs in this parser.'>Disable parser warnings? <input type='checkbox' id='optionEnableWarnings' /></span>
-      <span class='container' title='Switch between preview and diff modes.'>Diff mode?<input type='checkbox' id='optionDiffMode' /></span>
+      <span class='container' title='Switch view modes.'>
+      <strong>View Modes:</strong> 
+      [<input type='radio' name='viewMode' value='preview' checked='checked'/> Preview]
+      [<input type='radio' name='viewMode' value='diff' /> Diff]
+      [<input type='radio' name='viewMode' value='html' /> HTML]
+      </span>
     </td>
     <td align='left'>
       <button onclick="updateView()">Update Preview</button> <span style='font-size:80%'>(Also use this to re-layout
@@ -381,6 +400,7 @@ This app was written by [http://wanderinghorse.net/home/stephan/ Stephan Beal] w
   * [http://code.google.com/p/wikiwym Wikiwym] for the wiki-to-HTML conversion.
   * [http://code.google.com/u/fabien.menager/ Fabien M&#0233;nager] provided the initial wiki-parsing code and inspiration.
   * [http://code.google.com/p/google-code-prettify/ google-code-prettify] for the syntax highlighting in source code blocks.
+  * [http://snowtide.com/jsdifflib Chas Emerick] wrote the "diff" view code.
   * [http://getfirebug.com/ Firebug] (in [http://www.getfirefox.com Firefox]) was often helpful, but most testing took place in [http://www.google.com/chrome Google Chrome]. (Running on Linux, of course.)
   * [http://kdewebdev.org Quanta/KDEWebDev] as the dev environment (because Emacs can't indent !JavaScript worth a damn).
   * A bacon and egg sandwich to curb the hunger in the middle of the hacking session.
