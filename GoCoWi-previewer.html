@@ -114,6 +114,9 @@
     });
     function updateView()
     {
+        /* src= jquery element whose height we need to get.
+        dest = jquery element whose size needs to be set to src's size.
+        */
         function obligatoryLayoutKludge(src,dest)
         {
           // obligatory layout kludge:
@@ -124,11 +127,13 @@
           dest.css({width:wid, height:ht});
           //ThisApp.preview.css({width:wid});
         }
+        var labelElem = jQuery('#viewModeName');
         try
         {
             var c = ThisApp.textarea.attr('value');
             if((!ThisApp.viewMode) || ('preview' === ThisApp.viewMode))
             {
+                labelElem.text("Preview");
                 c = ThisApp.gcwp.parse(c);
                 if( ThisApp.pageName )
                 {
@@ -167,35 +172,43 @@
                 });
                 prettyPrint()/* updates {{{code}}} blocks. */;
             }
-            else if(c && ('diff' === ThisApp.viewMode))
+            else if('diff' === ThisApp.viewMode)
             {
-                var orig = ThisApp.pageCache[ThisApp.pageName];
-                var base = difflib.stringAsLines(orig ? orig : c);
-                var newtxt = difflib.stringAsLines(c);
-                // create a SequenceMatcher instance that diffs the two sets of lines
-                var sm = new difflib.SequenceMatcher(base, newtxt);
-                // get the opcodes from the SequenceMatcher instance
-                // opcodes is a list of 3-tuples describing what changes should be made to the base text
-                //      in order to yield the new text
-                var opcodes = sm.get_opcodes();
-                var diffoutputdiv = ThisApp.preview;
-                diffoutputdiv.empty();
-                var contextSize = null;
-                // build the diff view and add it to the current DOM
-                diffoutputdiv.append(diffview.buildView({
-                    baseTextLines:base,
-                    newTextLines:newtxt,
-                    opcodes:opcodes,
-                    // set the display titles for each resource
-                    baseTextName:"Server Version",
-                    newTextName:"Your Version",
-                    contextSize:contextSize,
-                    viewType: 1 //$("inline").checked ? 1 : 0
-                }));
+                labelElem.text("Diff");
+                if( c )
+                {
+                  var orig = ThisApp.pageCache[ThisApp.pageName];
+                  var base = difflib.stringAsLines(orig ? orig : c);
+                  var newtxt = difflib.stringAsLines(c);
+                  // create a SequenceMatcher instance that diffs the two sets of lines
+                  var sm = new difflib.SequenceMatcher(base, newtxt);
+                  // get the opcodes from the SequenceMatcher instance
+                  // opcodes is a list of 3-tuples describing what changes should be made to the base text
+                  //      in order to yield the new text
+                  var opcodes = sm.get_opcodes();
+                  var diffoutputdiv = ThisApp.preview;
+                  diffoutputdiv.empty();
+                  var contextSize = null;
+                  // build the diff view and add it to the current DOM
+                  diffoutputdiv.append(diffview.buildView({
+                      baseTextLines:base,
+                      newTextLines:newtxt,
+                      opcodes:opcodes,
+                      // set the display titles for each resource
+                      baseTextName:"Server Version",
+                      newTextName:"Your Version",
+                      contextSize:contextSize,
+                      viewType: 1 //$("inline").checked ? 1 : 0
+                  }));
+                }
+                else {
+                  ThisApp.preview.empty().text("Nothing to diff!");
+                }
                 obligatoryLayoutKludge( jQuery(diffoutputdiv), ThisApp.textarea);
             }
-            else if( c && ('html' === ThisApp.viewMode) )
+            else if( 'html' === ThisApp.viewMode )
             {
+                labelElem.text("HTML");
                 if(c) c = ThisApp.gcwp.parse(c);
                 //alert( c ? c.substr(1,10) : "EMPTY!");
                 var wrap = jQuery('<div></div>');
@@ -210,7 +223,10 @@
                 obligatoryLayoutKludge( ThisApp.textarea, ta );
                 ThisApp.preview.empty().append(wrap);
             }
-
+            else
+            {
+              throw new Error("Internal error: unexpected view mode '"+ThisApp.viewMode+"'!");
+            }
         }
         catch(e)
         {
@@ -331,7 +347,7 @@
   <tr>
   <td colspan=2>
     Google Code project name: <input type='text' id='GoCoProjectName' cols='40' value='wikiwym'/>
-    or: <select id='SelectProject'>
+    or: <select id='SelectProject' title='These projects were selected because they have nice test pages :)'>
     <option>--Select Project--</option>
     <option>beup</option>
     <option>v8</option>
@@ -366,7 +382,7 @@
       the views if you resize your browser window.)</span>
     </td>
   </tr>
-  <tr><th>Google Code-style Wiki Markup</th><th>HTML</th></tr>
+  <tr><th>Google Code-style Wiki Markup</th><th id='viewModeName'>Preview</th></tr>
   <tr>
     <td class="layout" width='50%' valign='top' align='left'>
         <textarea id="textarea" wrap="soft" rows="50" class="editor">
