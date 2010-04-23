@@ -25,6 +25,9 @@
       color:white;
       opacity:0.75;
     }
+  button, select {
+    font-size: 0.9em;
+  }
   </style>
 	
   <script type="text/javascript">
@@ -44,6 +47,7 @@
     jQuery(document).ready(function(JQ) {
         jQuery.noConflict();
         ThisApp.gcwp = new GoogleCodeWikiParser();
+        ThisApp.gcwp.options.outputSeparator = '\n';
         ThisApp.preview = jQuery('#wikicontent');
         ThisApp.textarea = jQuery('#textarea');
         ThisApp.hiddenDefaultWiki = jQuery('#DefaultWikiText');
@@ -367,7 +371,7 @@
   </td>
   </tr>
   <tr>
-    <td align='left'>
+    <td align='left' colspan='2'>
       <button onclick="goHome()">Home</button>
       <span class='container' title='Note that warnings may be caused by some malformed wiki code or bugs in this parser.'>Disable parser warnings? <input type='checkbox' id='optionEnableWarnings' /></span>
       <span class='container' title='Switch view modes.'>
@@ -377,12 +381,12 @@
       [<input type='radio' name='viewMode' value='html' />HTML]
       </span>
     </td>
-    <td align='left'>
-      <button onclick="updateView()">Update Preview</button> <span style='font-size:80%'>(Also use this to re-layout
-      the views if you resize your browser window.)</span>
-    </td>
   </tr>
-  <tr><th>Google Code-style Wiki Markup</th><th id='viewModeName'>Preview</th></tr>
+  <tr><th>Google Code-style Wiki Markup</th>
+      <th><span  id='viewModeName'>Preview</span>
+        <button onclick="updateView()" title='Also use this to re-layout the views if you resize your browser window.'>Update</button>
+      </th>
+  </tr>
   <tr>
     <td class="layout" width='50%' valign='top' align='left'>
         <textarea id="textarea" wrap="soft" rows="50" class="editor">
