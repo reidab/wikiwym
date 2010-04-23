@@ -216,7 +216,7 @@
                 {
                     wrap.append( '<h1>'+ThisApp.pageName+'</h1>' );
                 }
-                var ta = jQuery("<textarea cols='60'></textarea>");
+                var ta = jQuery("<textarea cols='60' readonly></textarea>");
                 ta.attr('value', c );
                 wrap.append(ta);
                 //ta.css( ThisApp.textarea.css() );// breaks in jQuery core
@@ -372,9 +372,9 @@
       <span class='container' title='Note that warnings may be caused by some malformed wiki code or bugs in this parser.'>Disable parser warnings? <input type='checkbox' id='optionEnableWarnings' /></span>
       <span class='container' title='Switch view modes.'>
       <strong>View Modes:</strong> 
-      [<input type='radio' name='viewMode' value='preview' checked='checked'/> Preview]
-      [<input type='radio' name='viewMode' value='diff' /> Diff]
-      [<input type='radio' name='viewMode' value='html' /> HTML]
+      [<input type='radio' name='viewMode' value='preview' checked='checked'/>Preview]
+      [<input type='radio' name='viewMode' value='diff' />Diff]
+      [<input type='radio' name='viewMode' value='html' />HTML]
       </span>
     </td>
     <td align='left'>
