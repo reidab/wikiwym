@@ -307,14 +307,18 @@
     }
     function loadProjectList(proj)
     {
-        proj = proj || ThisApp.projectInput.attr('value');
-        ThisApp.projectInput.attr('value',proj);
+        if( ! proj ) {
+          proj = ThisApp.projectInput.attr('value');
+        }
+        else {
+          ThisApp.projectInput.attr('value',proj);
+        }
         if( ! /^\S+$/.test(proj) )
         {
             alert("You must enter a Google Code project name first!");
             return;
         }
-        ThisApp.pageList.empty().text('Loading wiki page list for '+ThisApp.project+'...');
+        ThisApp.pageList.empty().text('Loading wiki page list for '+proj+'...');
         var r = new JSONRequest({type:'googlecode/getWikiList',
                     payload:{
                         project:proj
@@ -383,7 +387,7 @@
     </td>
   </tr>
   <tr><th>Google Code-style Wiki Markup</th>
-      <th><span  id='viewModeName'>Preview</span>
+      <th><span id='viewModeName'>Preview</span>
         <button onclick="updateView()" title='Also use this to re-layout the views if you resize your browser window.'>Update</button>
       </th>
   </tr>
