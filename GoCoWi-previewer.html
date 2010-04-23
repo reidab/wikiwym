@@ -132,6 +132,7 @@
                     // obligatory layout kludge:
                     var wid = jQuery('#layout').width() || jQuery('body').width() || 800;
                     var ht =  ThisApp.preview.height() || jQuery('body').height() || 800;
+                    if( ht < 64 ) ht = 64;
                     wid = (wid-(wid/25))/2;
                     ThisApp.textarea.css({width:wid, height:ht});
                     //ThisApp.preview.css({width:wid});
