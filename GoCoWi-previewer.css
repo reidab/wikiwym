@@ -73,6 +73,7 @@ fieldset {
 	display: inline;
 	padding: 2px;
 	vertical-align: middle;
+ text-align: left;   
 }
 
 label {

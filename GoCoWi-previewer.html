@@ -42,6 +42,8 @@
         hiddenDefaultWiki:null,
         homeProject:'wikiwym',
         viewMode:'preview',
+        updateMode:'enter',
+        updateTimerID:null,
         pageCache: {}
     };
     jQuery(document).ready(function() {
@@ -55,10 +57,17 @@
         ThisApp.projectInput = jQuery('#GoCoProjectName');
         ThisApp.btnProjectLoad  = jQuery('#LoadProjectButton');
         ThisApp.pageList = jQuery('#WikiPageList');
-        ThisApp.textarea.keypress(function(event) {
-            if ((event.keyCode == '13'/*\r*/) || (event.keyCode=='9'/*tab*/)) {
-                //event.preventDefault();
-                updateView();
+        ThisApp.textarea.keyup(function(event) {
+            if( 'enter' == ThisApp.updateMode ) {
+              if ((event.keyCode == '13'/*\r*/) || (event.keyCode=='9'/*tab*/)) {
+                  updateView();
+              }
+            }
+            else if( 'keypress' == ThisApp.updateMode ) {
+              updateView();
+            }
+            else {
+              // assume timer will get it.
             }
         });
         ThisApp.projectInput.change(function(event) {
@@ -90,6 +99,26 @@
         jQuery('input[name=viewMode]').click( function() {
           ThisApp.viewMode = jQuery(this).attr('value');
           updateView();
+        });
+        jQuery('#timerValue').change( function() {
+          if( 'timer' == ThisApp.updateMode ) {
+            var tv = jQuery('option:selected',jQuery(this)).attr('value');
+            clearInterval( ThisApp.updateTimerID );
+            ThisApp.updateTimerID = null;
+            ThisApp.updateTimerID = setInterval( updateView, tv );
+          }
+        });
+        jQuery('input[name=updateMode]').click( function() {
+          var v = jQuery(this).attr('value');
+          if( v == ThisApp.updateMode ) return;
+          ThisApp.updateMode = v;
+          if( 'timer' == v ) {
+            jQuery('option:selected', jQuery('#timerValue') ).click();
+          }
+          else {
+            clearInterval( ThisApp.updateTimerID );
+            ThisApp.updateTimerID = null;
+          }
         });
         if(1)
         {  // Add a visual notification when JSONRequest messages are pending...
@@ -366,20 +395,33 @@
 	
   <table class="layout">
   <tr>
-  	<td><strong>Google Code-style Wiki Markup</strong></td>
-    <td>
-      <!--<span id='viewModeName' style='visibility:hidden'>Preview</span>-->
-      <button onclick="updateView()" title="Also use this to re-layout the views if you resize your browser window">Update</button>
+<!--  	<td><strong>Google Code-style Wiki Markup</strong></td>-->
+    <td colspan='2' align='right' valign='middle'>
+      <strong style='float:left'>Google Code-style Wiki Markup:</strong>
       <fieldset title="Switch view modes.">
         <legend>View Modes</legend> 
         <label><input type="radio" name="viewMode" value="preview" checked="checked"/> Preview</label>
         <label><input type="radio" name="viewMode" value="diff" /> Diff</label>
         <label><input type="radio" name="viewMode" value="html" /> HTML</label>
       </fieldset>
+      <fieldset title="Change when the preview is updated.">
+        <legend>Update preview on...</legend>
+        <label><input type="radio" name="updateMode" value="enter" checked="checked"/>ENTER</label>
+        <label><input type="radio" name="updateMode" value="keypress" />Keypress</label>
+        <label><input type="radio" name="updateMode" value="timer" />Timer:
+            <select id='timerValue'>
+            <option value='3000'>3s</option>
+            <option value='5000'>5s</option>
+            <option value='10000' selected>10s</option>
+            <option value='30000'>30s</option>
+            <option value='60000'>60s</option>
+            </select>
+        </label>
+      </fieldset>
       <fieldset title="Note that warnings may be caused by some malformed wiki code or bugs in this parser">
         <legend>Options</legend> 
-      	<label><input type="checkbox" id="optionEnableWarnings" /> Disable warnings?</label>
-		  </fieldset>
+        <label><input type="checkbox" id="optionEnableWarnings" /> Disable warnings?</label>
+      </fieldset>
     </td>
   </tr>
   <tr>
@@ -413,10 +455,10 @@ when you tap Enter or click the Update button.
 
 
 =About this Application=
-This app was written by [http://wanderinghorse.net/home/stephan/ Stephan Beal] with a little help from:
+This app was written by [http://wanderinghorse.net/home/stephan/ Stephan Beal] with help from:
 
   * [http://code.google.com/p/wikiwym Wikiwym] for the wiki-to-HTML conversion.
-  * [http://code.google.com/u/fabien.menager/ Fabien M&#0233;nager], co-developer of Wikiwym, provided the initial inspiration.
+  * [http://code.google.com/u/fabien.menager/ Fabien M&#0233;nager], co-developer of Wikiwym, provided the initial inspiration and made this UI pretty.
   * The [http://fossil.wanderinghorse.net/repos/JSONMessage JSONMessage] framework collects the wiki pages from google.
   * [http://www.jquery.com jQuery] simplifies the DOM manipulation and UI interaction.
   * [http://code.google.com/p/google-code-prettify/ google-code-prettify] does the syntax highlighting in wiki source code blocks and the HTML preview.
