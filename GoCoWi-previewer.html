@@ -4,17 +4,17 @@
 <head>
   <title>Google Code wiki syntax editor</title>
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-	
+  
   <script type="text/javascript" src="lib/jsdifflib/difflib.js"></script>
   <script type="text/javascript" src="lib/jsdifflib/diffview.js"></script>
-  <script type="text/javascript" src="lib/JSONMessage/JSONMessage.js.php"></script>
   <script type="text/javascript" src="lib/prettify/prettify.js"></script>
+  <script type="text/javascript" src="lib/JSONMessage/JSONMessage.js.php"></script>
   <script type="text/javascript" src="lib/GoogleCodeWikiParser.js"></script>
   
-  <link type="text/css" href="lib/jsdifflib/diffview.css" rel="stylesheet" />
-  <link type="text/css" href="lib/prettify/prettify.css" rel="stylesheet" />
-  <link type="text/css" href="GoCoWi-previewer.css" rel="stylesheet" />
-	
+  <link type="text/css" rel="stylesheet" href="lib/prettify/prettify.css" />
+  <link type="text/css" rel="stylesheet" href="lib/jsdifflib/diffview.css" />
+  <link type="text/css" rel="stylesheet" href="GoCoWi-previewer.css" />
+  
   <style type="text/css">
     #ajaxNotification {
       position:absolute;
@@ -25,11 +25,11 @@
       color:white;
       opacity:0.75;
     }
-  button, select {
+  select {
     font-size: 0.9em;
   }
   </style>
-	
+  
   <script type="text/javascript">
     var ThisApp = {
         gcwp:null,
@@ -44,7 +44,7 @@
         viewMode:'preview',
         pageCache: {}
     };
-    jQuery(document).ready(function(JQ) {
+    jQuery(document).ready(function() {
         jQuery.noConflict();
         ThisApp.gcwp = new GoogleCodeWikiParser();
         ThisApp.gcwp.options.outputSeparator = '\n';
@@ -123,6 +123,7 @@
         */
         function obligatoryLayoutKludge(src,dest)
         {
+          return;
           // obligatory layout kludge:
           var wid = jQuery('#layout').width() || jQuery('body').width() || 800;
           var ht =  src.height() || jQuery('body').height() || 800;
@@ -144,7 +145,7 @@
                     c = '<h1>'+ThisApp.pageName+'</h1>'+c;
                 }
                 ThisApp.preview.html( c );
-                obligatoryLayoutKludge(ThisApp.preview, ThisApp.textarea);
+                //obligatoryLayoutKludge(ThisApp.preview, ThisApp.textarea);
                 /**
                     Update links within the preview area:
 
@@ -208,24 +209,25 @@
                 else {
                   ThisApp.preview.empty().text("Nothing to diff!");
                 }
-                obligatoryLayoutKludge( jQuery(diffoutputdiv), ThisApp.textarea);
+                //obligatoryLayoutKludge( jQuery(diffoutputdiv), ThisApp.textarea);
             }
             else if( 'html' === ThisApp.viewMode )
             {
                 labelElem.text("HTML");
-                if(c) c = ThisApp.gcwp.parse(c);
-                //alert( c ? c.substr(1,10) : "EMPTY!");
-                var wrap = jQuery('<div></div>');
-                if( ThisApp.pageName )
-                {
-                    wrap.append( '<h1>'+ThisApp.pageName+'</h1>' );
+                ThisApp.preview.empty();
+				
+                if(c) c = ThisApp.gcwp.parse(c).replace(/&/g,'&amp;').replace(/</g, '&lt;');
+				
+                if( ThisApp.pageName ) {
+                  ThisApp.preview.append( '<h1>'+ThisApp.pageName+'</h1>' );
                 }
-                var ta = jQuery("<textarea cols='60' readonly></textarea>");
-                ta.attr('value', c );
-                wrap.append(ta);
+				
+                var ta = jQuery("<pre class=\"prettyprint\"></pre>");
+                ta.html( c );
+                ThisApp.preview.append(ta);
                 //ta.css( ThisApp.textarea.css() );// breaks in jQuery core
-                obligatoryLayoutKludge( ThisApp.textarea, ta );
-                ThisApp.preview.empty().append(wrap);
+                //obligatoryLayoutKludge( ThisApp.textarea, ta );
+                prettyPrint();
             }
             else
             {
@@ -339,66 +341,58 @@
   </script>
 </head>
 <body>
-	<table class="layout" style='width:98%'>
-		<tr>
-<!--   
-			<td class="layout" style="border-bottom: 1px solid #999; padding: 2px;" colspan="2">
-			  Copy/paste/edit the wiki code in the textarea on the left
-              click the Update button to update the preview on the right. It will also update each time
-              you tap the ENTER key in the left-side editor.
-		  </td>
-  -->      
-            <td class="layout" style="border-bottom: 1px solid #999; padding: 2px;" align='center' colspan="2">
-            <h1><a href='http://code.google.com/p/wikiwym/'>Wikiwym</a> Wiki Parser Demo</h1>
-          </td>
-		</tr>
-  <tr>
-  <td colspan=2>
-    Google Code project name: <input type='text' id='GoCoProjectName' cols='40' value='wikiwym'/>
-    or: <select id='SelectProject' title='These projects were selected because they have nice test pages :)'>
-    <option>--Select Project--</option>
-    <option>beup</option>
-    <option>v8</option>
-    <option>v8-juice</option>
-    <option>v8cgi</option>
-    <option>yapeal</option>
-    <option>qboard</option>
-    <option>whefs</option>
-    <option>wikiwym</option>
-    <option>cproxyv8</option>
+	<div>
+		Google Code project name: <input type='text' id='GoCoProjectName' size='20' value='wikiwym'/>
+    or: 
+		<select id='SelectProject' title='These projects were selected because they have nice test pages :)'>
+	    <option>--Select Project--</option>
+	    <option>beup</option>
+	    <option>v8</option>
+	    <option>v8-juice</option>
+	    <option>v8cgi</option>
+	    <option>yapeal</option>
+	    <option>qboard</option>
+	    <option>whefs</option>
+	    <option>wikiwym</option>
+	    <option>cproxyv8</option>
     </select>
-    or: <button onclick="goHome()">Home</button>
-    <br/>
-  </td>
-  </tr>
+    or: 
+		<button onclick="goHome()">Home</button>
+	</div>
+	
+	<div id="WikiPageList">
+		When a project is selected, its wiki pages will be listed here.
+  </div>
+	
+  <table class="layout">
   <tr>
-    <td align='left' colspan='2'>
-      <span id='WikiPageList'>When a project is selected, its wiki pages will be listed here.</span>
+  	<td><strong>Google Code-style Wiki Markup</strong></td>
+    <td>
+      <!--<span id='viewModeName' style='visibility:hidden'>Preview</span>-->
+      <button onclick="updateView()" title="Also use this to re-layout the views if you resize your browser window">Update</button>
+      <fieldset title="Switch view modes.">
+        <legend>View Modes</legend> 
+        <label><input type="radio" name="viewMode" value="preview" checked="checked"/> Preview</label>
+        <label><input type="radio" name="viewMode" value="diff" /> Diff</label>
+        <label><input type="radio" name="viewMode" value="html" /> HTML</label>
+      </fieldset>
+      <fieldset title="Note that warnings may be caused by some malformed wiki code or bugs in this parser">
+        <legend>Options</legend> 
+      	<label><input type="checkbox" id="optionEnableWarnings" /> Disable warnings?</label>
+		  </fieldset>
     </td>
   </tr>
-  <tr><td align='center'><strong>Google Code-style Wiki Markup</strong></td>
-      <td align='left'>
-        <!--<span id='viewModeName' style='visibility:hidden'>Preview</span>-->
-        <button onclick="updateView()" title='Also use this to re-layout the views if you resize your browser window.'>Update</button>
-        <span class='container' title='Switch view modes.'>
-          <strong>View Modes:</strong> 
-          [<input type='radio' name='viewMode' value='preview' checked='checked'/>Preview]
-          [<input type='radio' name='viewMode' value='diff' />Diff]
-          [<input type='radio' name='viewMode' value='html' />HTML]
-        </span>
-        <span class='container' title='Note that warnings may be caused by some malformed wiki code or bugs in this parser.'><input type='checkbox' id='optionEnableWarnings' />
-          Disable warnings?</span>
-      </td>
-  </tr>
   <tr>
-    <td class="layout" width='50%' valign='top' align='left'>
-        <textarea id="textarea" wrap="soft" rows="50" class="editor">
+    <td class="editor">
+      <textarea id="textarea" wrap="soft">
 If you see this text then your browser cannot handle the JavaScript needed
 to run this application. Sorry. Try <a href='http://www.google.com/chrome'>Google Chrome</a>.
 </textarea>
-     </td>
-    <td valign='top' align='left'><div id="wikicontent" class="layout"  width='50%'></div></td>
-    </tr>
+    </td>
+    <td class="preview">
+    	<div id="wikicontent"></div>
+		</td>
+  </tr>
 </table>
 <!--
 <wiki:toc max_depth=3></wiki:toc>
@@ -445,9 +439,6 @@ too tired to deal with new "nice-to-have" features.
 [http://wanderinghorse.net/home/stephan/ http://wanderinghorse.net/home/stephan/stephan_beal_sylt_072006_small.jpg]
 </div>
 
-<!--
-
--->
 <span id='ajaxNotification'></span>
 <!--
   * *bold* _emphasized_ *_bold emphasized ^SuperScript^!_*.
