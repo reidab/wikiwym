@@ -41,7 +41,8 @@ class JSONResponse_GoCo_GetWikiPage extends JSONResponse
         {
             throw new Exception($this->getType()." requires a 'page' property in the payload!",2);
         }
-        $url = 'http://'.$proj.'.googlecode.com/svn/wiki/'.$page.'.wiki';
+        $rev = (int)@$pay['r'];
+        $url = 'http://'.$proj.'.googlecode.com/svn/wiki/'.$page.'.wiki'.($rev ? '?r='.$rev : '');
         $fh = @file_get_contents($url, 'r');
         if( false === $fh )
         {
@@ -51,6 +52,7 @@ class JSONResponse_GoCo_GetWikiPage extends JSONResponse
         $opay['url'] = $url;
         $opay['project'] = $proj;
         $opay['page'] = $page;
+        if( $rev ) $opay['r'] = $rev;
         $opay['content'] = $fh;
         $this->setPayload($opay);
     }
