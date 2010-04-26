@@ -22,6 +22,30 @@ External requirements:
 Author: Stephan Beal (http://wanderinghorse.net/home/stephan/)
 
 License: Public Domain
+
+Achtung: on 2010 April 26, the classes JSONRequest and JSONResponse were renamed
+to JSONMessage.Request resp. JSONMessage.Response, to (A) cut down on global
+namespace polution and (B) avoid any conflict/confusion with Doug Crockford's
+JSONRequest API. If you prefer to save a bit of typing and don't mind a potential
+naming collision with Crockford's API, then add the following to your
+JSONMessage.localconfig.js (or somewhere equivalent):
+
+@code
+JSONRequest = JSONMessage.Request;
+JSONResponse = JSONMessage.Response;
+@endcode
+
+TODOs:
+
+  - Try to come up with an application-agnostic authentication interface,
+  which can use a client-supplied function to authenticate that a given
+  message is allowed to do what it asked to do. Without this, arbitrary
+  clients can use arbitrary JSONMessage hosts to perform work, and
+  most web admins probably don't want that. Authentication might simply
+  check that a session is active (which requires that the message-using
+  application page sets up the session), or that a message contains
+  user/password information (or some authentication token returned by
+  the server).
 **********************************************************************/
 if( ! class_exists('JSONUtil', false ) )
 {
@@ -394,6 +418,14 @@ class JSONMessage
 
     The PHP API has a utility function, JSONMessage::generateID(),
     which generates unqiue IDs for this purpose.
+
+
+    Note: this API has NOTHING to do with Douglas Crockford's
+    JSONRequest API proposal (http://www.json.org/JSONRequest.html),
+    and the name collision was only seen after deploying this code
+    in several projects. The JS-side parts of the API were renamed
+    to avoid any confusion/conflict, but no such conflict is ever
+    expected on the server side.
 */
 class JSONRequest extends JSONMessage
 {
