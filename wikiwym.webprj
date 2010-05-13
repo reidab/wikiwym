@@ -8,7 +8,6 @@
     <item url="style.css" uploadstatus="1" />
     <item url="index.html" uploadstatus="1" />
     <item url="lib/" uploadstatus="1" />
-    <item url="lib/prototype.js" uploadstatus="1" />
     <item url="lib/parser.js" uploadstatus="1" />
     <item url="" uploadstatus="1" />
     <templates>templates/</templates>
@@ -18,60 +17,44 @@
     <item url="lib/tests/" uploadstatus="1" />
     <item url="lib/tests/v8-juice-GCWP.js" uploadstatus="1" />
     <item url="lib/tests/v8-juice-tests.make" uploadstatus="1" />
-    <item url="index-jquery.html" />
-    <item url="GoCoWi-previewer.html" />
-    <item url="lib/JSONMessage/" />
-    <item url="lib/JSONMessage/extendClass.js" />
-    <item url="lib/JSONMessage/jquery-1.3.2.min.js" />
-    <item url="lib/JSONMessage/jquery-1.4.2.js" />
-    <item url="lib/JSONMessage/jquery.bogomenu.js" />
-    <item url="lib/JSONMessage/jquery.html.js" />
-    <item url="lib/JSONMessage/json2.js" />
-    <item url="lib/JSONMessage/JSONAble.inc.js" />
-    <item url="lib/JSONMessage/JSONMessage.inc.js" />
-    <item url="lib/JSONMessage/JSONMessage.inc.php" />
-    <item url="lib/JSONMessage/JSONMessage.js.php" />
-    <item url="lib/JSONMessage/JSONMessage.localconfig.js" />
-    <item url="lib/JSONMessage/JSONRequest-dispatch.php" />
-    <item url="lib/JSONMessage/JSONUtil.inc.php" />
-    <item url="lib/JSONMessage/response/" />
-    <item url="lib/JSONMessage/response/ChuckNorris.inc.php" />
-    <item url="lib/JSONMessage/response/clearSession.inc.php" />
-    <item url="lib/JSONMessage/response/cookie.inc.php" />
-    <item url="lib/JSONMessage/response/curl.inc.php" />
-    <item url="lib/JSONMessage/response/env.inc.php" />
-    <item url="lib/JSONMessage/response/fortune.inc.php" />
-    <item url="lib/JSONMessage/response/googlecode/" />
-    <item url="lib/JSONMessage/response/local/" />
-    <item url="lib/JSONMessage/response/login.inc.php" />
-    <item url="lib/JSONMessage/response/serverSession.inc.php" />
-    <item url="lib/JSONMessage/response/sleep.inc.php" />
-    <item url="lib/JSONMessage/response/test/" />
-    <item url="lib/JSONMessage/response/throw.inc.php" />
-    <item url="lib/JSONMessage/response/googlecode/getWikiList.inc.php" />
-    <item url="lib/JSONMessage/response/googlecode/getWikiPage.inc.php" />
-    <item url="lib/JSONMessage/response/local/foo/" />
-    <item url="lib/JSONMessage/response/local/localEventCheck.inc.php" />
-    <item url="lib/JSONMessage/response/local/foo/bar.inc.php" />
-    <item url="lib/JSONMessage/response/test/localEventCheck.inc.php" />
-    <item url="GoCoWi-previewer.css" />
-    <item url="upload-demo-site.sh" />
-    <item url="bookmarklet.js" />
-    <item url="GoCoWi-bookmarklet.js" />
-    <item url="lib/jsdifflib/difflib.js" />
-    <item url="lib/jsdifflib/" />
-    <item url="lib/jsdifflib/diffview.css" />
-    <item url="lib/jsdifflib/diffview.js" />
-    <item url="lib/prettify/" />
-    <item url="lib/prettify/lang-hs.js" />
-    <item url="lib/prettify/lang-lisp.js" />
-    <item url="lib/prettify/lang-lua.js" />
-    <item url="lib/prettify/lang-ml.js" />
-    <item url="lib/prettify/lang-proto.js" />
-    <item url="lib/prettify/lang-sql.js" />
-    <item url="lib/prettify/lang-vb.js" />
-    <item url="lib/prettify/lang-wiki.js" />
-    <item url="lib/prettify/prettify.css" />
-    <item url="lib/prettify/prettify.js" />
+    <item url="index-jquery.html" uploadstatus="1" />
+    <item url="GoCoWi-previewer.html" uploadstatus="1" />
+    <item url="lib/JSONMessage/" uploadstatus="1" />
+    <item url="lib/JSONMessage/extendClass.js" uploadstatus="1" />
+    <item url="lib/JSONMessage/json2.js" uploadstatus="1" />
+    <item url="lib/JSONMessage/JSONAble.inc.js" uploadstatus="1" />
+    <item url="lib/JSONMessage/JSONMessage.inc.js" uploadstatus="1" />
+    <item url="lib/JSONMessage/JSONMessage.inc.php" uploadstatus="1" />
+    <item url="lib/JSONMessage/JSONMessage.js.php" uploadstatus="1" />
+    <item url="lib/JSONMessage/JSONMessage.localconfig.js" uploadstatus="1" />
+    <item url="lib/JSONMessage/JSONRequest-dispatch.php" uploadstatus="1" />
+    <item url="lib/JSONMessage/JSONUtil.inc.php" uploadstatus="1" />
+    <item url="lib/JSONMessage/response/" uploadstatus="1" />
+    <item url="lib/JSONMessage/response/ChuckNorris.inc.php" uploadstatus="1" />
+    <item url="lib/JSONMessage/response/cookie.inc.php" uploadstatus="1" />
+    <item url="lib/JSONMessage/response/googlecode/" uploadstatus="1" />
+    <item url="lib/JSONMessage/response/local/" uploadstatus="1" />
+    <item url="lib/JSONMessage/response/googlecode/getWikiList.inc.php" uploadstatus="1" />
+    <item url="lib/JSONMessage/response/googlecode/getWikiPage.inc.php" uploadstatus="1" />
+    <item url="GoCoWi-previewer.css" uploadstatus="1" />
+    <item url="upload-demo-site.sh" uploadstatus="1" />
+    <item url="bookmarklet.js" uploadstatus="1" />
+    <item url="lib/jsdifflib/difflib.js" uploadstatus="1" />
+    <item url="lib/jsdifflib/" uploadstatus="1" />
+    <item url="lib/jsdifflib/diffview.css" uploadstatus="1" />
+    <item url="lib/jsdifflib/diffview.js" uploadstatus="1" />
+    <item url="lib/prettify/" uploadstatus="1" />
+    <item url="lib/prettify/lang-hs.js" uploadstatus="1" />
+    <item url="lib/prettify/lang-lisp.js" uploadstatus="1" />
+    <item url="lib/prettify/lang-lua.js" uploadstatus="1" />
+    <item url="lib/prettify/lang-ml.js" uploadstatus="1" />
+    <item url="lib/prettify/lang-proto.js" uploadstatus="1" />
+    <item url="lib/prettify/lang-sql.js" uploadstatus="1" />
+    <item url="lib/prettify/lang-vb.js" uploadstatus="1" />
+    <item url="lib/prettify/lang-wiki.js" uploadstatus="1" />
+    <item url="lib/prettify/prettify.css" uploadstatus="1" />
+    <item url="lib/prettify/prettify.js" uploadstatus="1" />
+    <item url="pack/Makefile" />
+    <item url="pack/" />
   </project>
 </webproject>
