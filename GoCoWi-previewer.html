@@ -367,10 +367,17 @@
         loadProjectList(ThisApp.homeProject);
     }
 
+    function toggleControls()
+    {
+        jQuery('.togglableControl').toggle();
+    }
   </script>
 </head>
 <body>
     <div style='text-align:center;padding:0px;margin:0px;'>
+    <a href='#' onclick='toggleControls(); return false;'>Toggle controls on/off</a>
+    </div>
+    <div style='text-align:center;padding:0px;margin:0px;' class='togglableControl'>
     <h2><a href='http://code.google.com/p/wikiwym'>Wikiwym</a> Preview Application</h2>
     Enter a Google Code project name: <input type='text' id='GoCoProjectName' size='20' value='wikiwym'/>
     or:
@@ -390,12 +397,12 @@
     or: <button onclick="goHome()">Home</button>
 	</div>
 	
-	<div id="WikiPageList">
+	<div id="WikiPageList" class='togglableControl'>
 		When a project is selected, its wiki pages will be listed here.
-  </div>
+    </div>
 	
   <table class="layout" style='margin:0.5em;width:98%;'>
-  <tr>
+  <tr class='togglableControl'>
 <!--  	<td><strong>Google Code-style Wiki Markup</strong></td>-->
     <td colspan='2'> <!--align='right' valign='bottom'-->
       <h2 style='float:left; clear:none;'>Google Code-style Wiki Markup:</h2>
